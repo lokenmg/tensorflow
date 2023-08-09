@@ -1,15 +1,21 @@
-import { SHA256 } from 'crypto-js';
 import React, { useState } from 'react';
-const GITHUB_TOKEN = "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";
-
+const GITHUB_TOKEN = "";
+const sha256 = async (data) => { 
+  const textAsBuffer = new TextEncoder().encode(data);
+  const hashBuffer = await window.crypto.subtle.digest('SHA-256', textAsBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const digest = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return (digest);
+}
 const MyButton = () => {
   const [URL_ENDPOINT, setEndpoint] = useState('');
+  
   const callWorkFlow = async (url, urlbin, modelname) => {
     let datakey = "i-love-adsoftsito|" + Date.now();
     console.log(datakey);
-    let mysha = SHA256(datakey);
+    let mysha = sha256(datakey);
     console.log("SHA : " + mysha);
-    await fetch('https://api.github.com/repos/adsoftsito/aiops/dispatches', {
+    await fetch('https://api.github.com/repos/lokenmg/myMLOps_Hello-World/dispatches', {
       method: 'POST',
       body: JSON.stringify({
         event_type: "predictionjs",
